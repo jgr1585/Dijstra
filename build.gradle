@@ -1,0 +1,52 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    id "org.jetbrains.kotlinx.dataframe" version "0.13.1"
+}
+
+group = 'at.fhv.jeb'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+def javaFXVersion = "17"
+
+def letsPlotVersion = project.ext["letsPlot.version"]
+
+dependencies {
+    implementation "org.jetbrains.lets-plot:lets-plot-jfx:$letsPlotVersion"
+    implementation "org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.7.0"
+
+    implementation "org.openjfx:javafx-base:$javaFXVersion:${getJavaFXPlatform()}"
+    implementation "org.openjfx:javafx-swing:$javaFXVersion:${getJavaFXPlatform()}"
+    implementation "org.openjfx:javafx-graphics:$javaFXVersion:${getJavaFXPlatform()}"
+    implementation "org.jetbrains.kotlinx:dataframe:0.13.1"
+
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0'
+
+    runtimeOnly 'org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.7.0'
+}
+
+static def getJavaFXPlatform() {
+    def currentOS = DefaultNativePlatform.currentOperatingSystem
+    if (currentOS.isWindows()) {
+        return "win"
+    } else if (currentOS.isLinux()) {
+        return "linux"
+    } else if (currentOS.isMacOsX()) {
+        return "mac"
+    } else {
+        throw new IllegalStateException("Unexpected OS: ${currentOS.name}")
+    }
+}
+
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(21)
+}
