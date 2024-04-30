@@ -12,4 +12,12 @@ data class Node(
     fun addEdge(edge: Edge) {
         edges.add(edge)
     }
+
+    override fun hashCode(): Int {
+        return uuid.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Node && other.uuid == uuid
+    }
 }

@@ -17,6 +17,7 @@ def javaFXVersion = "17"
 def letsPlotVersion = project.ext["letsPlot.version"]
 
 dependencies {
+    
     implementation "org.jetbrains.lets-plot:lets-plot-jfx:$letsPlotVersion"
     implementation "org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.7.0"
 

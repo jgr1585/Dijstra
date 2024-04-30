@@ -31,6 +31,7 @@ fun main() {
 
     val graph = SimpleObjectProperty<Graph>()
     val plot = SimpleObjectProperty<Plot>()
+    val eulerText = JLabel("Euler: Maybe???")
     val controller = Controller(plot)
     val mapper = jacksonObjectMapper()
 
@@ -54,14 +55,16 @@ fun main() {
         val nodesDf = newValue.getDataFrameNodes()
         val edgesDf = newValue.getDataFrameEdges(nodesDf)
         val plotSize = mapOf(
-            "minX" to newValue.nodes.minOf { it.x } - 2,
-            "maxX" to newValue.nodes.maxOf { it.x } + 2,
-            "minY" to newValue.nodes.minOf { it.y } - 2,
-            "maxY" to newValue.nodes.maxOf { it.y } + 2
+            "minX" to newValue.nodes.minOf { it.x } - 80000,
+            "maxX" to newValue.nodes.maxOf { it.x } + 80000,
+            "minY" to newValue.nodes.minOf { it.y } - 80000,
+            "maxY" to newValue.nodes.maxOf { it.y } + 80000
         )
 
+        println(plotSize)
+
         plot.set(letsPlot(nodesDf.toMap()) { x = "x"; y = "y" } +
-                geomSegment(data = edgesDf.toMap(), sizeEnd = 25, arrow = arrow()) {
+                geomSegment(data = edgesDf.toMap(), sizeEnd = 30, arrow = arrow()) {
                     x = "x"
                     y = "y"
                     xend = "xTo"
@@ -76,6 +79,12 @@ fun main() {
         )
 
         controller.rebuildPlotComponent()
+        eulerText.text = "Euler: ${if (newValue.hasEulerPath()) "Yes" else "No"}"
+
+        if (newValue.hasEulerPath()) {
+            val eulerPath = newValue.getEulerPath()
+            println("Euler Path: ${eulerPath.joinToString { it.name }}")
+        }
     }
 
     graph.set(Graph(nodes))
@@ -115,6 +124,8 @@ fun main() {
                 }
             }
         })
+
+        add(eulerText)
     }
     window.contentPane.add(controlPanel)
 

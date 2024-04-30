@@ -12,6 +12,11 @@
       "from": "File1",
       "to": "File2",
       "weight": 1
+    },
+    {
+      "from": "File2",
+      "to": "File1",
+      "weight": 2
     }
   ]
 }

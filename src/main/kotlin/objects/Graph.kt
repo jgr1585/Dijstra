@@ -8,21 +8,17 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.rename
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.random.Random
 
 data class Graph(
     val nodes: MutableList<Node> = mutableListOf()
 ) {
     fun getDataFrameNodes(): AnyFrame {
 
-        val radius = 10.0  // Define a constant radius value
-        val angleStep = 2 * Math.PI / nodes.size  // Calculate the angle step
-
-        nodes.forEachIndexed { index, node ->
-            val angle = angleStep * index  // Calculate the angle for this node
-            node.x = (radius * cos(angle)).toInt()  // Convert polar to Cartesian coordinates
-            node.y = (radius * sin(angle)).toInt()
+        nodes.forEach { node ->
+            val random = Random(node.uuid.hashCode())
+            node.x = random.nextInt(10000) * 1600 // spread out the nodes in the x-axis
+            node.y = random.nextInt(10000) * 1600 // spread out the nodes in the y-axis
         }
 
         return dataFrameOf(
@@ -31,6 +27,31 @@ data class Graph(
             "x" to nodes.map { it.x },
             "y" to nodes.map { it.y }
         )
+    }
+
+    fun hasEulerPath(): Boolean {
+        val oddNodes = nodes.count { it.edges.size % 2 != 0 }
+        return oddNodes == 0 || oddNodes == 2
+    }
+
+    fun getEulerPath(): List<Node> {
+        val startNode = nodes.firstOrNull { it.edges.size % 2 != 0 } ?: nodes.first()
+        val path = mutableListOf<Node>()
+        val visited = mutableSetOf<Node>()
+        val stack = mutableListOf(startNode)
+
+        while (stack.isNotEmpty()) {
+            val node = stack.last()
+            val edge = node.edges.firstOrNull { !visited.contains(it.target) }
+            if (edge != null) {
+                stack.add(edge.target)
+                visited.add(edge.target)
+            } else {
+                path.add(stack.removeLast())
+            }
+        }
+
+        return path
     }
 
     fun getDataFrameEdges(nodesDf: AnyFrame) = dataFrameOf(
