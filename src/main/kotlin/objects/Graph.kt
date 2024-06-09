@@ -17,8 +17,8 @@ data class Graph(
 
         nodes.forEach { node ->
             val random = Random(node.uuid.hashCode())
-            node.x = random.nextInt(10000) * 1600 // spread out the nodes in the x-axis
-            node.y = random.nextInt(10000) * 1600 // spread out the nodes in the y-axis
+            node.x = random.nextInt(1300) * 1500 // spread out the nodes in the x-axis
+            node.y = random.nextInt(1300) * 1500 // spread out the nodes in the y-axis
         }
 
         return dataFrameOf(

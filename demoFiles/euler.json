@@ -1,0 +1,35 @@
+{
+  "nodes": [
+    {
+      "name": "File1"
+    },
+    {
+      "name": "File2"
+    },
+    {
+      "name": "File3"
+    }
+  ],
+  "edges": [
+    {
+      "from": "File1",
+      "to": "File2",
+      "weight": 1
+    },
+    {
+      "from": "File2",
+      "to": "File1",
+      "weight": 2
+    },
+    {
+      "from": "File3",
+      "to": "File1",
+      "weight": 1
+    },
+    {
+      "from": "File2",
+      "to": "File3",
+      "weight": 2
+    }
+  ]
+}
