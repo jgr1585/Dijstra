@@ -3,6 +3,7 @@ package minimalDemo
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import javafx.application.Platform
 import javafx.beans.property.SimpleObjectProperty
+import minimalDemo.algo.*
 import minimalDemo.json.JGraph
 import minimalDemo.objects.Graph
 import minimalDemo.objects.graph.Edge
@@ -84,6 +85,18 @@ fun main() {
         if (newValue.hasEulerPath()) {
             val eulerPath = newValue.getEulerPath()
             println("Euler Path: ${eulerPath.joinToString { it.name }}")
+
+            val (distances, previousNodes) = dijkstra(graph.get(), eulerPath.first())
+            printAlgoResults(distances, previousNodes)
+
+            val (dijkstraDistances, dijkstraPreviousNodes) = runAlgorithm(graph.get(), eulerPath.first(), DijkstraRelaxation())
+            println("\nDijkstra-Distances:")
+            printAlgoResults(dijkstraDistances, dijkstraPreviousNodes)
+
+            val (primDistances, primPreviousNodes) = runAlgorithm(graph.get(),  eulerPath.first(), PrimRelaxation())
+            println("\nPrim-Distances:")
+            printAlgoResults(primDistances, primPreviousNodes)
+
         }
     }
 
